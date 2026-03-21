@@ -27,8 +27,8 @@ let TicketsService = class TicketsService {
     }
     async findAll(user) {
         const includeRelations = {
-            author: { select: { id: true, username: true, email: true } },
-            assignee: { select: { id: true, username: true, email: true } }
+            author: { select: { id: true, username: true, email: true, department: true, position: true } },
+            assignee: { select: { id: true, username: true, email: true, department: true, position: true } }
         };
         if (user.role === 'ADMIN') {
             return this.prisma.ticket.findMany({
@@ -48,8 +48,8 @@ let TicketsService = class TicketsService {
         const ticket = await this.prisma.ticket.findUnique({
             where: { id },
             include: {
-                author: { select: { id: true, username: true, email: true } },
-                assignee: { select: { id: true, username: true, email: true } }
+                author: { select: { id: true, username: true, email: true, department: true, position: true } },
+                assignee: { select: { id: true, username: true, email: true, department: true, position: true } }
             }
         });
         if (!ticket) {

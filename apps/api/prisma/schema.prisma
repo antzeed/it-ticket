@@ -19,6 +19,8 @@ model User {
   username  String   @unique
   password  String
   role      Role     @default(USER)
+  department String?
+  position   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   tickets         Ticket[] @relation("AuthoredTickets")

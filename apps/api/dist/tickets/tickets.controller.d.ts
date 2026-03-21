@@ -20,11 +20,15 @@ export declare class TicketsController {
             id: string;
             email: string;
             username: string;
+            department: string | null;
+            position: string | null;
         };
         assignee: {
             id: string;
             email: string;
             username: string;
+            department: string | null;
+            position: string | null;
         } | null;
     } & {
         id: string;
@@ -43,11 +47,15 @@ export declare class TicketsController {
             id: string;
             email: string;
             username: string;
+            department: string | null;
+            position: string | null;
         };
         assignee: {
             id: string;
             email: string;
             username: string;
+            department: string | null;
+            position: string | null;
         } | null;
     } & {
         id: string;

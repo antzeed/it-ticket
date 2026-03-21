@@ -14,8 +14,8 @@ interface Ticket {
   imageUrl: string | null;
   createdAt: string;
   authorId: string;
-  author?: { username: string; email: string };
-  assignee?: { id: string; username: string; email: string } | null;
+  author?: { username: string; email: string; department?: string; position?: string };
+  assignee?: { id: string; username: string; email: string; department?: string; position?: string } | null;
 }
 
 interface UserProfile {
@@ -160,7 +160,12 @@ export default function TicketDetailPage() {
               <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
                 <dt className="text-sm font-medium text-gray-500">Requester</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {ticket.author?.username || ticket.authorId}
+                  <span className="font-semibold">{ticket.author?.username || ticket.authorId}</span>
+                  {ticket.author?.department && (
+                    <span className="text-gray-500 ml-2">
+                      - {ticket.author.position} ({ticket.author.department})
+                    </span>
+                  )}
                 </dd>
               </div>
             )}
@@ -168,9 +173,16 @@ export default function TicketDetailPage() {
               <dt className="text-sm font-medium text-gray-500">Assignee</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex items-center">
                 {ticket.assignee ? (
-                  <span className="font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md">
-                    {ticket.assignee.username}
-                  </span>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md">
+                      {ticket.assignee.username}
+                    </span>
+                    {ticket.assignee.department && (
+                      <span className="text-xs text-gray-500">
+                        {ticket.assignee.position} ({ticket.assignee.department})
+                      </span>
+                    )}
+                  </div>
                 ) : (
                   <div className="flex items-center">
                     <span className="text-gray-400 italic">Unassigned</span>

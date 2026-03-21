@@ -12,11 +12,15 @@ interface Ticket {
   status: string;
   createdAt: string;
   authorId: string;
+  author?: { username: string; email: string };
+  assignee?: { id: string; username: string; email: string } | null;
 }
 
 interface UserProfile {
   id: string;
   role: string;
+  email: string;
+  username: string;
 }
 
 export default function TicketDetailPage() {
@@ -61,6 +65,24 @@ export default function TicketDetailPage() {
     } catch (err) {
       console.error('Failed to update status', err);
       alert('Failed to update ticket status');
+    } finally {
+      setUpdatingParams(false);
+    }
+  };
+
+  const handleAssignToMe = async () => {
+    if (!ticket || user?.role !== 'ADMIN') return;
+    setUpdatingParams(true);
+    try {
+      await api.patch(`/tickets/${ticket.id}`, { assigneeId: user.id });
+      // update local state
+      setTicket({ 
+        ...ticket, 
+        assignee: { id: user.id, username: (user as any).username || 'Me', email: user.email || '' } 
+      });
+    } catch (err) {
+      console.error('Failed to assign ticket', err);
+      alert('Failed to assign ticket.');
     } finally {
       setUpdatingParams(false);
     }
@@ -134,11 +156,36 @@ export default function TicketDetailPage() {
             </div>
             {user.role === 'ADMIN' && (
               <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
-                <dt className="text-sm font-medium text-gray-500">Requester ID</dt>
-                <dd className="mt-1 text-sm text-gray-500 font-mono sm:mt-0 sm:col-span-2">{ticket.authorId}</dd>
+                <dt className="text-sm font-medium text-gray-500">Requester</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {ticket.author?.username || ticket.authorId}
+                </dd>
               </div>
             )}
             <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">Assignee</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex items-center">
+                {ticket.assignee ? (
+                  <span className="font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md">
+                    {ticket.assignee.username}
+                  </span>
+                ) : (
+                  <div className="flex items-center">
+                    <span className="text-gray-400 italic">Unassigned</span>
+                    {user.role === 'ADMIN' && (
+                      <button
+                        onClick={handleAssignToMe}
+                        disabled={updatingParams}
+                        className="ml-4 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-1 px-3 rounded-md transition-colors disabled:opacity-50"
+                      >
+                        Assign to me
+                      </button>
+                    )}
+                  </div>
+                )}
+              </dd>
+            </div>
+            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
               <dt className="text-sm font-medium text-gray-500">Description</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 whitespace-pre-wrap">
                 {ticket.description}

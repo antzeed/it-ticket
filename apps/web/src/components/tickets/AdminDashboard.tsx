@@ -9,6 +9,8 @@ interface Ticket {
   status: string;
   createdAt: string;
   authorId: string;
+  author?: { username: string };
+  assignee?: { username: string } | null;
 }
 
 export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
@@ -60,7 +62,8 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requester ID</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requester</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignee</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
                 <th scope="col" className="relative px-6 py-3"><span className="sr-only">View</span></th>
               </tr>
@@ -68,7 +71,7 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
             <tbody className="bg-white divide-y divide-gray-200">
               {tickets.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center text-gray-500">No tickets found in the system.</td>
+                  <td colSpan={6} className="px-6 py-10 text-center text-gray-500">No tickets found in the system.</td>
                 </tr>
               ) : (
                 tickets.map((ticket) => (
@@ -86,8 +89,17 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
                         {ticket.status.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono text-xs">
-                      {ticket.authorId.substring(0, 8)}...
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {ticket.author?.username || ticket.authorId.substring(0,8)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      {ticket.assignee ? (
+                          <span className="text-blue-600 bg-blue-50 px-2 py-1 rounded-md text-xs font-medium">
+                              {ticket.assignee.username}
+                          </span>
+                      ) : (
+                          <span className="text-gray-400 text-xs italic">Unassigned</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {format(new Date(ticket.createdAt), 'MMM d, yyyy HH:mm')}

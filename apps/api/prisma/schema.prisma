@@ -21,7 +21,8 @@ model User {
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  tickets   Ticket[]
+  tickets         Ticket[] @relation("AuthoredTickets")
+  assignedTickets Ticket[] @relation("AssignedTickets")
 }
 
 enum Role {
@@ -35,7 +36,9 @@ model Ticket {
   description String
   status      TicketStatus @default(OPEN)
   authorId    String
-  author      User         @relation(fields: [authorId], references: [id])
+  author      User         @relation("AuthoredTickets", fields: [authorId], references: [id])
+  assigneeId  String?
+  assignee    User?        @relation("AssignedTickets", fields: [assigneeId], references: [id])
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 }

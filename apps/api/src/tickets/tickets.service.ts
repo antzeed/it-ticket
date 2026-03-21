@@ -16,15 +16,21 @@ export class TicketsService {
     }
 
     async findAll(user: any) {
-        // If admin, see all tickets. Otherwise, see own tickets.
+        const includeRelations = {
+             author: { select: { id: true, username: true, email: true } },
+             assignee: { select: { id: true, username: true, email: true } }
+        };
+
         if (user.role === 'ADMIN') {
             return this.prisma.ticket.findMany({
                 orderBy: { createdAt: 'desc' },
+                include: includeRelations,
             });
         } else {
             return this.prisma.ticket.findMany({
                 where: { authorId: user.id },
                 orderBy: { createdAt: 'desc' },
+                include: includeRelations,
             });
         }
     }
@@ -32,6 +38,10 @@ export class TicketsService {
     async findOne(id: string, user: any) {
         const ticket = await this.prisma.ticket.findUnique({
             where: { id },
+            include: {
+                 author: { select: { id: true, username: true, email: true } },
+                 assignee: { select: { id: true, username: true, email: true } }
+            }
         });
 
         if (!ticket) {

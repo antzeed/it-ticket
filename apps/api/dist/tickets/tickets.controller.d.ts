@@ -11,8 +11,20 @@ export declare class TicketsController {
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
+        assigneeId: string | null;
     }>;
-    findAll(req: any): Promise<{
+    findAll(req: any): Promise<({
+        author: {
+            id: string;
+            email: string;
+            username: string;
+        };
+        assignee: {
+            id: string;
+            email: string;
+            username: string;
+        } | null;
+    } & {
         id: string;
         title: string;
         description: string;
@@ -20,8 +32,20 @@ export declare class TicketsController {
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
-    }[]>;
+        assigneeId: string | null;
+    })[]>;
     findOne(id: string, req: any): Promise<{
+        author: {
+            id: string;
+            email: string;
+            username: string;
+        };
+        assignee: {
+            id: string;
+            email: string;
+            username: string;
+        } | null;
+    } & {
         id: string;
         title: string;
         description: string;
@@ -29,6 +53,7 @@ export declare class TicketsController {
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
+        assigneeId: string | null;
     }>;
     update(id: string, updateData: any, req: any): Promise<{
         id: string;
@@ -38,5 +63,6 @@ export declare class TicketsController {
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
+        assigneeId: string | null;
     }>;
 }

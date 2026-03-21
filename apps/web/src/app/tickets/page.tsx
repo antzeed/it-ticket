@@ -76,16 +76,6 @@ export default function TicketsPage() {
                 <span className="text-sm font-medium text-gray-900">{user.username}</span>
                 <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold">{user.role}</span>
               </div>
-              
-              {user.role === 'USER' && (
-                <Link
-                  href="/tickets/new"
-                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-                >
-                  <Plus size={16} className="mr-2" />
-                  New Request
-                </Link>
-              )}
 
               <button
                 onClick={handleLogout}
@@ -114,7 +104,7 @@ export default function TicketsPage() {
         {user.role === 'ADMIN' ? (
           <AdminDashboard tickets={tickets} />
         ) : (
-          <UserDashboard tickets={tickets} />
+          <UserDashboard tickets={tickets} onTicketCreated={fetchData} />
         )}
       </div>
     </div>

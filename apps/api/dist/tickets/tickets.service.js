@@ -26,21 +26,31 @@ let TicketsService = class TicketsService {
         });
     }
     async findAll(user) {
+        const includeRelations = {
+            author: { select: { id: true, username: true, email: true } },
+            assignee: { select: { id: true, username: true, email: true } }
+        };
         if (user.role === 'ADMIN') {
             return this.prisma.ticket.findMany({
                 orderBy: { createdAt: 'desc' },
+                include: includeRelations,
             });
         }
         else {
             return this.prisma.ticket.findMany({
                 where: { authorId: user.id },
                 orderBy: { createdAt: 'desc' },
+                include: includeRelations,
             });
         }
     }
     async findOne(id, user) {
         const ticket = await this.prisma.ticket.findUnique({
             where: { id },
+            include: {
+                author: { select: { id: true, username: true, email: true } },
+                assignee: { select: { id: true, username: true, email: true } }
+            }
         });
         if (!ticket) {
             throw new common_1.NotFoundException('Ticket not found');

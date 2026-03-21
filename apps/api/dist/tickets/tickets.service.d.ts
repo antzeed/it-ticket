@@ -11,8 +11,20 @@ export declare class TicketsService {
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
+        assigneeId: string | null;
     }>;
-    findAll(user: any): Promise<{
+    findAll(user: any): Promise<({
+        author: {
+            id: string;
+            email: string;
+            username: string;
+        };
+        assignee: {
+            id: string;
+            email: string;
+            username: string;
+        } | null;
+    } & {
         id: string;
         title: string;
         description: string;
@@ -20,8 +32,20 @@ export declare class TicketsService {
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
-    }[]>;
+        assigneeId: string | null;
+    })[]>;
     findOne(id: string, user: any): Promise<{
+        author: {
+            id: string;
+            email: string;
+            username: string;
+        };
+        assignee: {
+            id: string;
+            email: string;
+            username: string;
+        } | null;
+    } & {
         id: string;
         title: string;
         description: string;
@@ -29,6 +53,7 @@ export declare class TicketsService {
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
+        assigneeId: string | null;
     }>;
     update(id: string, updateData: any, user: any): Promise<{
         id: string;
@@ -38,5 +63,6 @@ export declare class TicketsService {
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
+        assigneeId: string | null;
     }>;
 }

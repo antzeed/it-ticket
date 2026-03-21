@@ -5,29 +5,29 @@ export declare class TicketsService {
     constructor(prisma: PrismaService);
     create(userId: string, createTicketDto: CreateTicketDto): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
-        createdAt: Date;
-        updatedAt: Date;
         authorId: string;
     }>;
     findAll(user: any): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
-        createdAt: Date;
-        updatedAt: Date;
         authorId: string;
     }[]>;
     findOne(id: string, user: any): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
-        createdAt: Date;
-        updatedAt: Date;
         authorId: string;
     }>;
 }

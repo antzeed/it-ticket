@@ -5,29 +5,38 @@ export declare class TicketsController {
     constructor(ticketsService: TicketsService);
     create(req: any, createTicketDto: CreateTicketDto): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
+        createdAt: Date;
+        updatedAt: Date;
         authorId: string;
     }>;
     findAll(req: any): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
+        createdAt: Date;
+        updatedAt: Date;
         authorId: string;
     }[]>;
     findOne(id: string, req: any): Promise<{
         id: string;
-        createdAt: Date;
-        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
+        createdAt: Date;
+        updatedAt: Date;
+        authorId: string;
+    }>;
+    update(id: string, updateData: any, req: any): Promise<{
+        id: string;
+        title: string;
+        description: string;
+        status: import("@prisma/client").$Enums.TicketStatus;
+        createdAt: Date;
+        updatedAt: Date;
         authorId: string;
     }>;
 }

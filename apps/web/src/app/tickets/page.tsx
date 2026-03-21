@@ -5,103 +5,118 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
 import { clearToken } from '@/lib/auth';
+import { LogOut, Plus } from 'lucide-react';
 
-interface Ticket {
-    id: string;
-    title: string;
-    description: string;
-    status: string;
-    createdAt: string;
+import UserDashboard from '@/components/tickets/UserDashboard';
+import AdminDashboard from '@/components/tickets/AdminDashboard';
+
+interface UserProfile {
+  id: string;
+  email: string;
+  username: string;
+  role: string;
 }
 
 export default function TicketsPage() {
-    const [tickets, setTickets] = useState<Ticket[]>([]);
-    const [loading, setLoading] = useState(true);
-    const router = useRouter();
+  const [tickets, setTickets] = useState<any[]>([]);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-    useEffect(() => {
-        fetchTickets();
-    }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    const fetchTickets = async () => {
-        try {
-            const response = await api.get('/tickets');
-            setTickets(response.data);
-        } catch (error) {
-            console.error('Failed to fetch tickets:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const fetchData = async () => {
+    try {
+      // 1. Fetch User Profile to get Role
+      const userRes = await api.get('/auth/me');
+      setUser(userRes.data);
 
-    const handleLogout = () => {
-        clearToken();
-        router.push('/login');
-    };
-
-    if (loading) {
-        return <div className="p-8 text-center text-gray-500">Loading tickets...</div>;
+      // 2. Fetch Tickets (Backend automatically handles RBAC filtering)
+      const ticketsRes = await api.get('/tickets');
+      setTickets(ticketsRes.data);
+      
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
+  const handleLogout = () => {
+    clearToken();
+    router.push('/login');
+  };
+
+  if (loading || !user) {
     return (
-        <div className="max-w-4xl mx-auto py-8 px-4">
-            <div className="flex justify-between items-center mb-8 bg-white p-4 rounded-lg shadow-sm">
-                <h1 className="text-2xl font-bold text-gray-900">IT Helpdesk Tickets</h1>
-                <div className="space-x-4">
-                    <Link
-                        href="/tickets/new"
-                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
-                    >
-                        Create Ticket
-                    </Link>
-                    <button
-                        onClick={handleLogout}
-                        className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                        Logout
-                    </button>
-                </div>
-            </div>
-
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                <ul className="divide-y divide-gray-200">
-                    {tickets.length === 0 ? (
-                        <li className="p-8 text-center text-gray-500">No tickets found.</li>
-                    ) : (
-                        tickets.map((ticket) => (
-                            <li key={ticket.id}>
-                                <Link href={`/tickets/${ticket.id}`} className="block hover:bg-gray-50">
-                                    <div className="px-4 py-4 sm:px-6">
-                                        <div className="flex items-center justify-between">
-                                            <p className="text-sm font-medium text-blue-600 truncate">{ticket.title}</p>
-                                            <div className="ml-2 flex-shrink-0 flex">
-                                                <p className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${ticket.status === 'OPEN' ? 'bg-green-100 text-green-800' :
-                                                        ticket.status === 'IN_PROGRESS' ? 'bg-yellow-100 text-yellow-800' :
-                                                            'bg-gray-100 text-gray-800'
-                                                    }`}>
-                                                    {ticket.status}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="mt-2 sm:flex sm:justify-between">
-                                            <div className="sm:flex">
-                                                <p className="flex items-center text-sm text-gray-500 line-clamp-1">
-                                                    {ticket.description}
-                                                </p>
-                                            </div>
-                                            <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                                <p>
-                                                    Created on <time dateTime={ticket.createdAt}>{new Date(ticket.createdAt).toLocaleDateString()}</time>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </li>
-                        ))
-                    )}
-                </ul>
-            </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
     );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 pb-12">
+      {/* Header */}
+      <nav className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <div className="flex-shrink-0 flex items-center">
+                <div className="h-8 w-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-sm">
+                  IT
+                </div>
+                <span className="ml-3 text-lg font-bold text-gray-900 tracking-tight">Helpdesk Portal</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="hidden md:flex flex-col items-end mr-4">
+                <span className="text-sm font-medium text-gray-900">{user.username}</span>
+                <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold">{user.role}</span>
+              </div>
+              
+              {user.role === 'USER' && (
+                <Link
+                  href="/tickets/new"
+                  className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+                >
+                  <Plus size={16} className="mr-2" />
+                  New Request
+                </Link>
+              )}
+
+              <button
+                onClick={handleLogout}
+                className="p-2 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100 transition-colors"
+                title="Logout"
+              >
+                <LogOut size={20} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {user.role === 'ADMIN' ? 'Admin Workspace' : 'My Portal'}
+          </h1>
+          <p className="mt-1 text-sm text-gray-500">
+            {user.role === 'ADMIN' 
+              ? 'Manage IT support tickets across the organization.'
+              : 'Track and manage your IT service requests.'}
+          </p>
+        </div>
+
+        {user.role === 'ADMIN' ? (
+          <AdminDashboard tickets={tickets} />
+        ) : (
+          <UserDashboard tickets={tickets} />
+        )}
+      </div>
+    </div>
+  );
 }

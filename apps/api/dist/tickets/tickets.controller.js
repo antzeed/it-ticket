@@ -31,6 +31,9 @@ let TicketsController = class TicketsController {
     findOne(id, req) {
         return this.ticketsService.findOne(id, req.user);
     }
+    update(id, updateData, req) {
+        return this.ticketsService.update(id, updateData, req.user);
+    }
 };
 exports.TicketsController = TicketsController;
 __decorate([
@@ -56,6 +59,15 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], TicketsController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:returntype", void 0)
+], TicketsController.prototype, "update", null);
 exports.TicketsController = TicketsController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Controller)('tickets'),

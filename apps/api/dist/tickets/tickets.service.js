@@ -50,6 +50,16 @@ let TicketsService = class TicketsService {
         }
         return ticket;
     }
+    async update(id, updateData, user) {
+        const ticket = await this.findOne(id, user);
+        if (user.role !== 'ADMIN') {
+            throw new common_1.ForbiddenException('Only administrators can update ticket status');
+        }
+        return this.prisma.ticket.update({
+            where: { id },
+            data: updateData,
+        });
+    }
 };
 exports.TicketsService = TicketsService;
 exports.TicketsService = TicketsService = __decorate([

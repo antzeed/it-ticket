@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Request, UseGuards, Patch } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -21,5 +21,10 @@ export class TicketsController {
     @Get(':id')
     findOne(@Param('id') id: string, @Request() req: any) {
         return this.ticketsService.findOne(id, req.user);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateData: any, @Request() req: any) {
+        return this.ticketsService.update(id, updateData, req.user);
     }
 }

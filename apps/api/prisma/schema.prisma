@@ -34,7 +34,9 @@ model Ticket {
   id          String       @id @default(uuid())
   title       String
   description String
-  status      TicketStatus @default(OPEN)
+  status      TicketStatus   @default(OPEN)
+  priority    TicketPriority @default(LOW)
+  imageUrl    String?
   authorId    String
   author      User         @relation("AuthoredTickets", fields: [authorId], references: [id])
   assigneeId  String?
@@ -48,4 +50,11 @@ enum TicketStatus {
   IN_PROGRESS
   RESOLVED
   CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }

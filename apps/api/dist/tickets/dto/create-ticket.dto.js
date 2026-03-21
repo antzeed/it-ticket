@@ -4,6 +4,8 @@ exports.CreateTicketDto = void 0;
 class CreateTicketDto {
     title;
     description;
+    priority;
+    imageUrl;
 }
 exports.CreateTicketDto = CreateTicketDto;
 //# sourceMappingURL=create-ticket.dto.js.map

@@ -8,6 +8,8 @@ export declare class TicketsService {
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
+        priority: import("@prisma/client").$Enums.TicketPriority;
+        imageUrl: string | null;
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
@@ -29,6 +31,8 @@ export declare class TicketsService {
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
+        priority: import("@prisma/client").$Enums.TicketPriority;
+        imageUrl: string | null;
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
@@ -50,6 +54,8 @@ export declare class TicketsService {
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
+        priority: import("@prisma/client").$Enums.TicketPriority;
+        imageUrl: string | null;
         createdAt: Date;
         updatedAt: Date;
         authorId: string;
@@ -60,6 +66,8 @@ export declare class TicketsService {
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
+        priority: import("@prisma/client").$Enums.TicketPriority;
+        imageUrl: string | null;
         createdAt: Date;
         updatedAt: Date;
         authorId: string;

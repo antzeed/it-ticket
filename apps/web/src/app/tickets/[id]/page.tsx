@@ -10,6 +10,8 @@ interface Ticket {
   title: string;
   description: string;
   status: string;
+  priority: string;
+  imageUrl: string | null;
   createdAt: string;
   authorId: string;
   author?: { username: string; email: string };
@@ -191,7 +193,17 @@ export default function TicketDetailPage() {
                 {ticket.description}
               </dd>
             </div>
-            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            {ticket.imageUrl && (
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Attachment</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                   <a href={`http://localhost:4000${ticket.imageUrl}`} target="_blank" rel="noopener noreferrer">
+                      <img src={`http://localhost:4000${ticket.imageUrl}`} alt="Attachment" className="max-w-xs rounded-lg shadow-sm border border-gray-200 hover:opacity-90 transition-opacity" />
+                   </a>
+                </dd>
+              </div>
+            )}
+            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 bg-gray-50">
               <dt className="text-sm font-medium text-gray-500">Created At</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {new Date(ticket.createdAt).toLocaleString()}

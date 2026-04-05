@@ -5,13 +5,13 @@ export declare class TicketsController {
     constructor(ticketsService: TicketsService);
     create(req: any, createTicketDto: CreateTicketDto): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
         priority: import("@prisma/client").$Enums.TicketPriority;
         imageUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
         authorId: string;
         assigneeId: string | null;
     }>;
@@ -32,13 +32,13 @@ export declare class TicketsController {
         } | null;
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
         priority: import("@prisma/client").$Enums.TicketPriority;
         imageUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
         authorId: string;
         assigneeId: string | null;
     })[]>;
@@ -59,25 +59,25 @@ export declare class TicketsController {
         } | null;
     } & {
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
         priority: import("@prisma/client").$Enums.TicketPriority;
         imageUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
         authorId: string;
         assigneeId: string | null;
     }>;
     update(id: string, updateData: any, req: any): Promise<{
         id: string;
+        createdAt: Date;
+        updatedAt: Date;
         title: string;
         description: string;
         status: import("@prisma/client").$Enums.TicketStatus;
         priority: import("@prisma/client").$Enums.TicketPriority;
         imageUrl: string | null;
-        createdAt: Date;
-        updatedAt: Date;
         authorId: string;
         assigneeId: string | null;
     }>;

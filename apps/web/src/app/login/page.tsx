@@ -32,21 +32,21 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#F1F4F9] px-4 font-sans">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] p-8 sm:p-10 z-10">
-        
+
         {/* Header */}
         <div className="text-center mb-10">
           <div className="mx-auto w-[68px] h-[68px] bg-[#5340FF] text-white rounded-full flex items-center justify-center mb-6 shadow-sm">
             <TicketIcon size={32} />
           </div>
-          <h2 className="text-[26px] font-bold text-[#1E1B4B] mb-2 font-display tracking-tight">IT Ticket System</h2>
+          <h2 className="text-[26px] font-bold text-[#1E1B4B] mb-2 font-display tracking-tight">Grade-A</h2>
           <p className="text-[#64748B] text-[16px] font-medium">เข้าสู่ระบบเพื่อเปิด ticket</p>
         </div>
 
         {/* Error message */}
         {error && (
-            <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100 flex items-center justify-center">
-                {error}
-            </div>
+          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl text-sm font-medium border border-red-100 flex items-center justify-center">
+            {error}
+          </div>
         )}
 
         {/* Form */}
@@ -63,7 +63,7 @@ export default function LoginPage() {
                 type="email"
                 required
                 className="block w-full pl-11 text-[15px] bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl py-3.5 px-4 focus:ring-2 focus:ring-[#5340FF]/50 focus:border-[#5340FF] transition-colors outline-none text-[#1E1B4B] placeholder:text-[#94A3B8]"
-                placeholder="your.email@company.com"
+                placeholder="your.email@grade-a.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -71,7 +71,7 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2.5">
-             <label className="block text-[15px] font-bold text-[#1E1B4B]">
+            <label className="block text-[15px] font-bold text-[#1E1B4B]">
               รหัสผ่าน
             </label>
             <div className="relative">
@@ -101,7 +101,7 @@ export default function LoginPage() {
                 จดจำฉันไว้
               </label>
             </div>
-            
+
             <div className="text-sm">
               <a href="#" className="font-bold text-[#5340FF] hover:text-[#4330EF] transition-colors text-[14px]">
                 ลืมรหัสผ่าน?
@@ -112,20 +112,19 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading || !email || !password}
-            className={`w-full flex justify-center py-4 px-4 rounded-xl text-[16px] font-bold transition-all ${
-                 (loading || !email || !password) 
-                   ? 'bg-[#5340FF]/60 text-white cursor-not-allowed shadow-none' 
-                   : 'bg-[#5340FF] hover:bg-[#4330EF] text-white shadow-[0_4px_14px_0_rgba(83,64,255,0.39)]'
+            className={`w-full flex justify-center py-4 px-4 rounded-xl text-[16px] font-bold transition-all ${(loading || !email || !password)
+              ? 'bg-[#5340FF]/60 text-white cursor-not-allowed shadow-none'
+              : 'bg-[#5340FF] hover:bg-[#4330EF] text-white shadow-[0_4px_14px_0_rgba(83,64,255,0.39)]'
               }`}
           >
             {loading ? 'กำลังเข้าสู่ระบบ...' : 'เข้าสู่ระบบ'}
           </button>
         </form>
       </div>
-      
+
       {/* Footer */}
       <div className="mt-8 text-center text-[14px] font-medium text-[#94A3B8]">
-        © 2026 IT Support Team. All rights reserved.
+        © 2026 Grade-A Support Team. All rights reserved.
       </div>
     </div>
   );

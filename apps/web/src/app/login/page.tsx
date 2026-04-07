@@ -16,6 +16,12 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!email || !email.includes('@')) {
+      setError('กรุณากรอกรูปแบบอีเมลให้ถูกต้อง');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -50,7 +56,7 @@ export default function LoginPage() {
         )}
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-6" noValidate>
           <div className="space-y-2.5">
             <label className="block text-[15px] font-bold text-[#1E1B4B]">
               อีเมล

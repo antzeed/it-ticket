@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { AlertCircle, Clock, CheckCircle, LayoutDashboard, Inbox, PlayCircle, CheckSquare } from 'lucide-react';
+import { AlertCircle, Clock, CheckCircle, LayoutDashboard, Inbox, PlayCircle, CheckSquare, Filter } from 'lucide-react';
 
 interface Ticket {
   id: string;
@@ -15,19 +15,29 @@ interface Ticket {
 }
 
 export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
-  const [filter, setFilter] = useState<'ALL' | 'OPEN' | 'IN_PROGRESS' | 'CLOSED'>('ALL');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'OPEN' | 'IN_PROGRESS' | 'CLOSED'>('ALL');
+  const [deptFilter, setDeptFilter] = useState<string>('ALL');
+
+  // Extract unique departments for the dropdown
+  const departments = useMemo(() => {
+    const depts = tickets
+      .map(t => t.author?.department)
+      .filter((dept): dept is string => typeof dept === 'string' && dept.trim() !== '');
+    return Array.from(new Set(depts)).sort();
+  }, [tickets]);
 
   const openCount = tickets.filter((t) => t.status === 'OPEN').length;
   const inProgressCount = tickets.filter((t) => t.status === 'IN_PROGRESS').length;
   const closedCount = tickets.filter((t) => t.status === 'CLOSED').length;
 
   const filteredTickets = tickets.filter((t) => {
-    if (filter === 'ALL') return true;
-    return t.status === filter;
+    const matchStatus = statusFilter === 'ALL' || t.status === statusFilter;
+    const matchDept = deptFilter === 'ALL' || t.author?.department === deptFilter;
+    return matchStatus && matchDept;
   });
 
   const getFilterTitle = () => {
-    switch (filter) {
+    switch (statusFilter) {
       case 'OPEN': return 'งานยังไม่ดำเนินการ (Open)';
       case 'IN_PROGRESS': return 'งานที่กำลังดำเนินการ (In Progress)';
       case 'CLOSED': return 'งานที่เรียบร้อยแล้ว (Closed)';
@@ -41,13 +51,13 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
       <div className="w-full md:w-64 flex-shrink-0 sticky top-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-4 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between">
-            <h3 className="font-bold text-gray-800">จัดการหน้างาน</h3>
+            <h3 className="font-bold text-gray-800">สถานะงาน</h3>
           </div>
           <div className="p-2 space-y-1">
             <button
-              onClick={() => setFilter('ALL')}
+              onClick={() => setStatusFilter('ALL')}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${
-                filter === 'ALL' 
+                statusFilter === 'ALL' 
                   ? 'bg-blue-50 text-blue-700' 
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               }`}
@@ -60,9 +70,9 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
             </button>
             
             <button
-              onClick={() => setFilter('OPEN')}
+              onClick={() => setStatusFilter('OPEN')}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${
-                filter === 'OPEN' 
+                statusFilter === 'OPEN' 
                   ? 'bg-red-50 text-red-700' 
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               }`}
@@ -75,9 +85,9 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
             </button>
 
             <button
-              onClick={() => setFilter('IN_PROGRESS')}
+              onClick={() => setStatusFilter('IN_PROGRESS')}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${
-                filter === 'IN_PROGRESS' 
+                statusFilter === 'IN_PROGRESS' 
                   ? 'bg-yellow-50 text-yellow-700' 
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               }`}
@@ -90,9 +100,9 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
             </button>
 
             <button
-              onClick={() => setFilter('CLOSED')}
+              onClick={() => setStatusFilter('CLOSED')}
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-[15px] font-medium transition-colors ${
-                filter === 'CLOSED' 
+                statusFilter === 'CLOSED' 
                   ? 'bg-green-50 text-green-700' 
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
               }`}
@@ -105,16 +115,39 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
             </button>
           </div>
         </div>
+
+        {/* Filters Sidebar (Department) */}
+        {departments.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-6">
+            <div className="px-4 py-3 border-b border-gray-100 bg-gray-50 flex items-center">
+              <Filter size={16} className="text-gray-400 mr-2" />
+              <h3 className="font-bold text-gray-800 text-sm">ตัวกรองเพิ่มเติม</h3>
+            </div>
+            <div className="p-4">
+               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">แผนก (Department)</label>
+               <select 
+                 value={deptFilter} 
+                 onChange={(e) => setDeptFilter(e.target.value)}
+                 className="block w-full text-sm border-gray-300 rounded-lg py-2 px-3 focus:ring-blue-500 focus:border-blue-500 outline-none text-gray-700 bg-gray-50 border shadow-sm"
+               >
+                  <option value="ALL">ทั้้งหมด (All Departments)</option>
+                  {departments.map(d => (
+                    <option key={d} value={d}>{d}</option>
+                  ))}
+               </select>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Main Content Area */}
       <div className="flex-1 space-y-6 overflow-hidden">
         
         {/* Status Dashboard Summary */}
-        {filter === 'ALL' && (
+        {statusFilter === 'ALL' && deptFilter === 'ALL' && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
             <div 
-               onClick={() => setFilter('OPEN')} 
+               onClick={() => setStatusFilter('OPEN')} 
                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center space-x-4 border-l-4 border-l-red-500 cursor-pointer hover:shadow-md transition-shadow"
              >
               <div className="p-3 rounded-full bg-red-50 text-red-600">
@@ -127,7 +160,7 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
             </div>
             
             <div 
-               onClick={() => setFilter('IN_PROGRESS')}
+               onClick={() => setStatusFilter('IN_PROGRESS')}
                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center space-x-4 border-l-4 border-l-yellow-500 cursor-pointer hover:shadow-md transition-shadow"
              >
               <div className="p-3 rounded-full bg-yellow-50 text-yellow-600">
@@ -140,7 +173,7 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
             </div>
 
             <div 
-               onClick={() => setFilter('CLOSED')}
+               onClick={() => setStatusFilter('CLOSED')}
                className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center space-x-4 border-l-4 border-l-green-500 cursor-pointer hover:shadow-md transition-shadow"
              >
               <div className="p-3 rounded-full bg-green-50 text-green-600">
@@ -156,8 +189,18 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
 
         {/* Tickets Table */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-in fade-in duration-300">
-          <div className="px-6 py-5 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-            <h3 className="text-lg font-bold text-gray-900">{getFilterTitle()}</h3>
+          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
+            <h3 className="text-lg font-bold text-gray-900 flex items-center space-x-2">
+               <span>{getFilterTitle()}</span>
+               {deptFilter !== 'ALL' && (
+                 <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-full ml-3 border border-blue-200">
+                    แผนก: {deptFilter}
+                 </span>
+               )}
+            </h3>
+            <div className="text-sm text-gray-500 font-medium">
+               พบทั้งหมด {filteredTickets.length} รายการ
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -175,7 +218,7 @@ export default function AdminDashboard({ tickets }: { tickets: Ticket[] }) {
                 {filteredTickets.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-6 py-12 text-center text-gray-500 font-medium bg-gray-50/50">
-                      ไม่พบข้อมูลตั๋วในสถานะนี้
+                      ไม่พบข้อมูลตั๋วตามตัวกรองที่เลือก
                     </td>
                   </tr>
                 ) : (

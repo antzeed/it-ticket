@@ -90,16 +90,7 @@ export default function TicketsPage() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        {user.role === 'ADMIN' && (
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">
-              Admin Workspace
-            </h1>
-            <p className="mt-1 text-sm text-gray-500">
-              Manage IT support tickets across the organization.
-            </p>
-          </div>
-        )}
+
 
         {user.role === 'ADMIN' ? (
           <AdminDashboard tickets={tickets} />

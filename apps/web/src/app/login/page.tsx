@@ -23,7 +23,7 @@ export default function LoginPage() {
       setToken(response.data.accessToken);
       router.push('/tickets');
     } catch (err) {
-      setError('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+      setError('กรุณากรอกอีเมลหรือรหัสผ่านให้ถูกต้อง');
     } finally {
       setLoading(false);
     }

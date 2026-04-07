@@ -102,10 +102,16 @@ export default function LoginPage() {
               </label>
             </div>
 
-            <div className="text-sm">
-              <a href="#" className="font-bold text-[#5340FF] hover:text-[#4330EF] transition-colors text-[14px]">
+            <div className="text-sm relative group">
+              <span className="font-bold text-[#5340FF] cursor-pointer text-[14px] hover:text-[#4330EF] transition-colors">
                 ลืมรหัสผ่าน?
-              </a>
+              </span>
+              <div className="absolute right-0 bottom-full mb-2 hidden group-hover:block z-10">
+                <div className="bg-[#1E1B4B] text-white text-[13px] font-medium rounded-xl px-4 py-2.5 whitespace-nowrap shadow-lg">
+                  กรุณาติดต่อ IT Support หรือ Admin
+                  <div className="absolute top-full right-4 border-4 border-transparent border-t-[#1E1B4B]" />
+                </div>
+              </div>
             </div>
           </div>
 

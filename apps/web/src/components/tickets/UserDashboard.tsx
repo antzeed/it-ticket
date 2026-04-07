@@ -162,18 +162,24 @@ export default function UserDashboard({ tickets, onTicketCreated }: { tickets: T
             
             <div className="space-y-2">
               <label htmlFor="title" className="block text-[15px] font-bold text-gray-900">
-                หัวข้อปัญหา
+                หมวดหมู่ปัญหา
               </label>
-              <input
-                type="text"
+              <select
                 name="title"
                 id="title"
                 required
-                className="block w-full text-[15px] border-gray-200 rounded-xl py-3.5 px-4 border focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm outline-none"
-                placeholder="เช่น คอมพิวเตอร์เปิดไม่ติด, อินเทอร์เน็ตช้า"
+                className="block w-full text-[15px] border-gray-200 rounded-xl py-3.5 px-4 border focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors shadow-sm outline-none bg-white appearance-none"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-              />
+              >
+                <option value="" disabled>-- กรุณาเลือกหมวดหมู่ปัญหา --</option>
+                <option value="คอมพิวเตอร์ / ฮาร์ดแวร์ (เช่น เปิดไม่ติด, จอฟ้า, อุปกรณ์ชำรุด)">💻 คอมพิวเตอร์ / ฮาร์ดแวร์ (เช่น เปิดไม่ติด, จอฟ้า, อุปกรณ์ชำรุด)</option>
+                <option value="อินเทอร์เน็ต / เครือข่าย (เช่น เข้าเว็บไม่ได้, Wi-Fi มีปัญหา)">🌐 อินเทอร์เน็ต / เครือข่าย (เช่น เข้าเว็บไม่ได้, Wi-Fi มีปัญหา)</option>
+                <option value="ซอฟต์แวร์ / โปรแกรม (เช่น โปรแกรมค้าง, ติดตั้งแอป, Error)">🛠️ ซอฟต์แวร์ / โปรแกรม (เช่น โปรแกรมค้าง, ติดตั้งแอป, Error)</option>
+                <option value="บัญชีผู้ใช้ / รหัสผ่าน (เช่น ลืมรหัสผ่าน, ถูกล็อค)">🔑 บัญชีผู้ใช้ / รหัสผ่าน (เช่น ลืมรหัสผ่าน, ถูกล็อค)</option>
+                <option value="ปริ้นเตอร์ / สแกนเนอร์ (เช่น พิมพ์ไม่ออก, หมึกหมด, กระดาษติด)">🖨️ ปริ้นเตอร์ / สแกนเนอร์ (เช่น พิมพ์ไม่ออก, หมึกหมด)</option>
+                <option value="ปัญหาอื่นๆ (โปรดระบุในรายละเอียด)">❓ ปัญหาอื่นๆ (โปรดอธิบายในรายละเอียด)</option>
+              </select>
             </div>
 
             <div className="space-y-2">

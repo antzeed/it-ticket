@@ -7,6 +7,7 @@ async function bootstrap() {
     origin: '*',
     credentials: true,
   });
-  await app.listen(process.env.PORT ?? 4000);
+  // Force exactly port 4000 to prevent AWS AppRunner overriding with PORT=8080 automatically
+  await app.listen(4000, "0.0.0.0");
 }
 bootstrap();

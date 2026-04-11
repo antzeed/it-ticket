@@ -13,7 +13,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     }
 
     async onModuleInit() {
-        await this.$connect();
+        // Remove blocking connection to allow app to start and pass health checks
+        // Prisma will automatically connect on first query
     }
 
     async onModuleDestroy() {

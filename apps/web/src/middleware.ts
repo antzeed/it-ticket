@@ -1,23 +1,20 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const publicRoutes = ['/login'];
-
 export function middleware(request: NextRequest) {
-    const token = request.cookies.get('it_ticket_token')?.value;
-    const isPublicRoute = publicRoutes.some(route => request.nextUrl.pathname.startsWith(route));
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    const backendUrl = process.env.API_URL || 'http://localhost:4000';
 
-    if (!token && !isPublicRoute && request.nextUrl.pathname !== '/') {
-        return NextResponse.redirect(new URL('/login', request.url));
-    }
+    // Extract the actual path after /api/ (e.g. /api/auth/login -> /auth/login)
+    const url = new URL(request.url);
+    const destinationPath = url.pathname.replace(/^\/api/, '') + url.search;
+    const finalDestination = `${backendUrl.replace(/\/$/, '')}${destinationPath}`;
 
-    if (token && isPublicRoute) {
-        return NextResponse.redirect(new URL('/tickets', request.url));
-    }
-
-    return NextResponse.next();
+    // Rewrite the request dynamically to the backend API
+    return NextResponse.rewrite(new URL(finalDestination));
+  }
 }
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: '/api/:path*',
 };

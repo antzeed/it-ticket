@@ -20,12 +20,11 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
         }
 
-        // Since we seeded without hashing (MVP), we just do a literal match here.
-        // In a real app we would use bcrypt.compare
-        const isPasswordValid = loginDto.password === user.password;
-
-        // Example for when passwords are hashed:
-        // const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
+        // Support both plain-text passwords (legacy/local) and bcrypt hashed passwords (production)
+        const isBcrypt = user.password.startsWith('$2b$') || user.password.startsWith('$2a$');
+        const isPasswordValid = isBcrypt
+          ? await bcrypt.compare(loginDto.password, user.password)
+          : loginDto.password === user.password;
 
         if (!isPasswordValid) {
             throw new UnauthorizedException('Invalid credentials');

@@ -16,16 +16,20 @@ exports.UploadController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const multer_1 = require("multer");
-const uuid_1 = require("uuid");
-const path_1 = require("path");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
+const s3_service_1 = require("./s3.service");
 let UploadController = class UploadController {
-    uploadFile(file) {
+    s3Service;
+    constructor(s3Service) {
+        this.s3Service = s3Service;
+    }
+    async uploadFile(file) {
         if (!file) {
             throw new common_1.BadRequestException('File is required');
         }
+        const s3Url = await this.s3Service.uploadFile(file);
         return {
-            url: `/uploads/${file.filename}`
+            url: s3Url
         };
     }
 };
@@ -33,13 +37,7 @@ exports.UploadController = UploadController;
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', {
-        storage: (0, multer_1.diskStorage)({
-            destination: './uploads',
-            filename: (req, file, cb) => {
-                const uniqueSuffix = (0, uuid_1.v4)() + (0, path_1.extname)(file.originalname);
-                cb(null, uniqueSuffix);
-            }
-        }),
+        storage: (0, multer_1.memoryStorage)(),
         fileFilter: (req, file, cb) => {
             if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
                 return cb(new common_1.BadRequestException('Only image files are allowed!'), false);
@@ -51,10 +49,11 @@ __decorate([
     __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], UploadController.prototype, "uploadFile", null);
 exports.UploadController = UploadController = __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Controller)('upload')
+    (0, common_1.Controller)('upload'),
+    __metadata("design:paramtypes", [s3_service_1.S3Service])
 ], UploadController);
 //# sourceMappingURL=upload.controller.js.map

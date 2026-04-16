@@ -22,7 +22,6 @@ let PrismaService = class PrismaService extends client_1.PrismaClient {
         super({ adapter });
     }
     async onModuleInit() {
-        await this.$connect();
     }
     async onModuleDestroy() {
         await this.$disconnect();

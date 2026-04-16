@@ -1,5 +1,8 @@
+import { S3Service } from './s3.service';
 export declare class UploadController {
-    uploadFile(file: Express.Multer.File): {
+    private readonly s3Service;
+    constructor(s3Service: S3Service);
+    uploadFile(file: Express.Multer.File): Promise<{
         url: string;
-    };
+    }>;
 }

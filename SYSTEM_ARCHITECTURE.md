@@ -19,7 +19,14 @@
 3. **RDS PostgreSQL (ห้องนิรภัยเก็บข้อมูล):** เซิร์ฟเวอร์ฐานข้อมูลเฉพาะทางบน AWS ที่มีความปลอดภัยสูงและแบ็คอัพรายวันให้อัตโนมัติ
 4. **S3 Bucket (โกดังเก็บไฟล์):** หน้าที่เหมือน Google Drive ไว้เก็บไฟล์แนบต่างๆ ที่ User อัปโหลดเข้ามา (เช่น รูปจอฟ้า, สลิป) เพราะการยัดรูปใส่ในตาราง Database ตรงๆ จะทำให้ระบบช้าและเปลืองค่าใช้จ่ายมาก
 5. **ECR - Elastic Container Registry (โกดังเก็บแม่พิมพ์):** ที่สำหรับเก็บ "อิมเมจระบบ" (Docker Image) ของเรา เพื่อให้ ECS หยิบไปเปิดรัน
-<img width="631" height="693" alt="image" src="https://github.com/user-attachments/assets/957960c7-9119-456d-89a4-a76c64b84468" />
+<img width="629" height="687" alt="image" src="https://github.com/user-attachments/assets/a7c4401c-3801-4f77-8176-0ac41401daf7" />
+1. Cloudflare Tunnel (Zero Trust): คุณวางคอนเทนเนอร์ ECS Service: cloudflare (cloudflared daemon) ไว้ใน Cluster เดียวกัน ให้มันทำหน้าที่เจาะอุโมงค์ออกไปหาเซิร์ฟเวอร์ Cloudflare ข้างนอก ทำให้ไม่ต้องเปิดพอร์ต (Inbound) ขาเข้าเลย ปลอดภัยสุดๆ
+2. การคุยกันภายใน (Call API): ECS Service: WEB สื่อสารหน้าบ้านและทำการส่ง Request/Proxy ไปหา ECS Service: API ได้โดยตรงผ่านเครือข่ายภายในของ VPC
+3. ฐานข้อมูล (RDS): ECS Service: API เป็นตัวเดียวที่ต่อตรงเข้าไปหา PostgreSQL ปลอดภัยจากการถูกเข้าถึงจากภายนอก
+4. การจัดการไฟล์ (S3): เห็นได้ชัดเจนว่ามีการเรียกใช้จากทั้ง API (ตอนอัปโหลดรูป) และ WEB (ตอนดึงรูปไปโชว์ในหน้าจอ)
+5. การดึง Source (ECR): Cluster ทำการ Pull ท่อ Image มาจาก ECR
+6. ระบบ Logging (CloudWatch): อันนี้ดีมากๆ ที่ใส่มาด้วยครับ เพราะ ECS Fargate เซิร์ฟเวอร์มันล่องหน การที่เราจะดู Log ว่าพังหรือไม่พัง ก็ต้องดูจากการพ่น Log ส่งไปรวมกันที่ CloudWatch ตรงนี้ทำให้ Flow ของ Diagram สมบูรณ์แบบสำหรับงาน Production เลยครับ
+
 
 
 ---

@@ -19,7 +19,8 @@
 3. **RDS PostgreSQL (ห้องนิรภัยเก็บข้อมูล):** เซิร์ฟเวอร์ฐานข้อมูลเฉพาะทางบน AWS ที่มีความปลอดภัยสูงและแบ็คอัพรายวันให้อัตโนมัติ
 4. **S3 Bucket (โกดังเก็บไฟล์):** หน้าที่เหมือน Google Drive ไว้เก็บไฟล์แนบต่างๆ ที่ User อัปโหลดเข้ามา (เช่น รูปจอฟ้า, สลิป) เพราะการยัดรูปใส่ในตาราง Database ตรงๆ จะทำให้ระบบช้าและเปลืองค่าใช้จ่ายมาก
 5. **ECR - Elastic Container Registry (โกดังเก็บแม่พิมพ์):** ที่สำหรับเก็บ "อิมเมจระบบ" (Docker Image) ของเรา เพื่อให้ ECS หยิบไปเปิดรัน
-<img width="640" height="705" alt="image" src="https://github.com/user-attachments/assets/d0adf9df-a260-40cf-96a1-3736cbb23775" />
+<img width="631" height="693" alt="image" src="https://github.com/user-attachments/assets/957960c7-9119-456d-89a4-a76c64b84468" />
+
 
 ---
 

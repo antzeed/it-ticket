@@ -9,12 +9,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UploadModule = void 0;
 const common_1 = require("@nestjs/common");
 const upload_controller_1 = require("./upload.controller");
+const s3_service_1 = require("./s3.service");
 let UploadModule = class UploadModule {
 };
 exports.UploadModule = UploadModule;
 exports.UploadModule = UploadModule = __decorate([
     (0, common_1.Module)({
         controllers: [upload_controller_1.UploadController],
+        providers: [s3_service_1.S3Service],
     })
 ], UploadModule);
 //# sourceMappingURL=upload.module.js.map

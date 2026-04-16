@@ -1,22 +1,17 @@
 import { Controller, Post, UseInterceptors, UploadedFile, UseGuards, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { v4 as uuidv4 } from 'uuid';
-import { extname } from 'path';
+import { memoryStorage } from 'multer';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { S3Service } from './s3.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('upload')
 export class UploadController {
+  constructor(private readonly s3Service: S3Service) {}
+
   @Post()
   @UseInterceptors(FileInterceptor('file', {
-    storage: diskStorage({
-      destination: './uploads',
-      filename: (req, file, cb) => {
-        const uniqueSuffix = uuidv4() + extname(file.originalname);
-        cb(null, uniqueSuffix);
-      }
-    }),
+    storage: memoryStorage(),
     fileFilter: (req, file, cb) => {
        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
            return cb(new BadRequestException('Only image files are allowed!'), false);
@@ -25,13 +20,17 @@ export class UploadController {
     },
     limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
   }))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
+  async uploadFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('File is required');
     }
-    // Return relative url path to be saved and loaded
+    
+    // Upload the file to S3
+    const s3Url = await this.s3Service.uploadFile(file);
+
+    // Return absolute S3 url to be saved in DB
     return {
-      url: `/uploads/${file.filename}`
+      url: s3Url
     };
   }
 }
